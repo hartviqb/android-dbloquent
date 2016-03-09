@@ -7,11 +7,12 @@ import com.github.hartviqb.dbloquent.DbLoquentMigration;
 import com.github.hartviqb.dbloquent.helper.DatabaseHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by hartviq on 5/27/15.
+ * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * @copyright 2016 hartviq
  */
+
 public class DatabaseMigrationHandler {
     private ArrayList<DbLoquentMigration> dbLoquentMigrations = new ArrayList<DbLoquentMigration>();
 

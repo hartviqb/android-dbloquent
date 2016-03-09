@@ -1,8 +1,10 @@
 package com.github.hartviqb.dbloquent;
 
 /**
- * Created by hartviq on 5/27/15.
+ * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * @copyright 2016 hartviq
  */
+
 public abstract class DbLoquentMigration {
 
     private String tableName;

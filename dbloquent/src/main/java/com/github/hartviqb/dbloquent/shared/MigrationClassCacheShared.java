@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import java.util.Set;
 
 /**
- * Created by hartviq on 05/02/16.
+ * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * @copyright 2016 hartviq
  */
+
 public class MigrationClassCacheShared {
     private static String FILENAME = "dbloquent_migration_class_cache_shared";
     private static String SHARED_MIGRATION_NAMES = "migrations";

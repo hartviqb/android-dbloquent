@@ -4,8 +4,10 @@ import com.github.hartviqb.dbloquent.DbLoquentMigration;
 import java.util.ArrayList;
 
 /**
- * Created by hartviq on 5/21/15.
+ * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * @copyright 2016 hartviq
  */
+
 public abstract class DatabaseConfig {
     public abstract Integer dbVersion();
     public abstract String dbName();

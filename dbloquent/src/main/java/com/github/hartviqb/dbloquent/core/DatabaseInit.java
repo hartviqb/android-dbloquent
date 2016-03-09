@@ -4,12 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import com.github.hartviqb.dbloquent.shared.MigrationClassCacheShared;
 
 /**
- * Created by hartviq on 5/21/15.
+ * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * @copyright 2016 hartviq
  */
+
 public class DatabaseInit extends SQLiteOpenHelper {
     private Context context;
     public DatabaseInit(Context context) {

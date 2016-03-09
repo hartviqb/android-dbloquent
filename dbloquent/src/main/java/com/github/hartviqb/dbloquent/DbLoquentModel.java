@@ -9,8 +9,10 @@ import com.github.hartviqb.dbloquent.core.DatabaseInit;
 import java.util.ArrayList;
 
 /**
- * Created by hartviq on 5/21/15.
+ * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * @copyright 2016 hartviq
  */
+
 public abstract class DbLoquentModel extends DatabaseInit {
 
     public static final String ORDER_TYPE_ASC = "ASC";
