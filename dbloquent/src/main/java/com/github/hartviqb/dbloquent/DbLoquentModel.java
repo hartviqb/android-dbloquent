@@ -85,10 +85,10 @@ public abstract class DbLoquentModel extends DatabaseInit {
         this.query = this.query + newQuery;
     }
 
-    public void where(String fieldname, String separator, String value) {
+    public void where(String fieldname, String expression, String value) {
         checkSeparatorWhereAndORQuery("AND");
 
-        String newQuery = fieldname + " " + separator + "'" + value + "'";
+        String newQuery = fieldname + " " + expression + "'" + value + "'";
         this.whereQuery = this.whereQuery + newQuery;
         this.query = this.query + newQuery;
     }
@@ -101,41 +101,55 @@ public abstract class DbLoquentModel extends DatabaseInit {
         this.query = this.query + newQuery;
     }
 
-    public void whereOR(String fieldname, String separator, String value) {
+    public void whereOR(String fieldname, String expression, String value) {
         checkSeparatorWhereAndORQuery("OR");
 
-        String newQuery = fieldname + " " + separator + "'" + value + "'";
+        String newQuery = fieldname + " " + expression + "'" + value + "'";
         this.whereQuery = this.whereQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
-    public void whereIN(String fieldname, String[] clause) {
+    public void whereIN(String fieldname, String[] clauses) {
         checkSeparatorWhereAndORQuery("AND");
-        String newQuery = fieldname + " IN(" + translateWhereINClause(clause) + ")";
+        String newQuery = fieldname + " IN(" + translateWhereINClause(clauses) + ")";
         this.whereQuery = this.whereQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
-    public void whereINOR(String fieldname, String[] clause) {
+    public void whereINOR(String fieldname, String[] clauses) {
         checkSeparatorWhereAndORQuery("OR");
-        String newQuery = fieldname + " IN (" + translateWhereINClause(clause) + ")";
+        String newQuery = fieldname + " IN (" + translateWhereINClause(clauses) + ")";
         this.whereQuery = this.whereQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
-    private String translateWhereINClause(String[] clause) {
+    private String translateWhereINClause(String[] clauses) {
         String clauseValue = "";
-        for (int i = 0; i < clause.length; i++) {
-            clauseValue = clauseValue + "'" + clause[i] + "'";
-            if (i < clause.length - 1) {
+        for (int i = 0; i < clauses.length; i++) {
+            clauseValue = clauseValue + "'" + clauses[i] + "'";
+            if (i < clauses.length - 1) {
                 clauseValue = clauseValue + ",";
             }
         }
         return clauseValue;
     }
 
-    public void orderBy(String fieldName, String type) {
-        this.query = this.query + " ORDER BY " + fieldName + " " + type;
+    public void limit(Integer noOfRows){
+        if (this.query != null) {
+            String newQuery = " LIMIT " + noOfRows + " ";
+            this.query = this.query + newQuery;
+        }
+    }
+
+    public void offset(Integer rowNum){
+        if (this.query != null) {
+            String newQuery = " OFFSET " + rowNum + " ";
+            this.query = this.query + newQuery;
+        }
+    }
+
+    public void orderBy(String fieldName, String typeOrder) {
+        this.query = this.query + " ORDER BY " + fieldName + " " + typeOrder;
     }
 
     public void groupBy(String fieldName) {
@@ -284,29 +298,29 @@ public abstract class DbLoquentModel extends DatabaseInit {
         return create;
     }
 
-    public Long createOrUpdate(ContentValues where, ContentValues data) {
+    public Long createOrUpdate(ContentValues wheres, ContentValues values) {
 
-        for (String key : where.keySet()) {
+        for (String key : wheres.keySet()) {
             String myKey = key;
-            String myValue = (String) where.get(key);
+            String myValue = (String) wheres.get(key);
             where(myKey, myValue);
         }
 
         ContentValues resultQwery = first();
         if (resultQwery.size() > 0) {
             this.primaryValue = resultQwery.getAsInteger(this.primaryName);
-            Boolean success = this.update(data);
+            Boolean success = this.update(values);
             if (success) {
                 return Long.parseLong(this.primaryValue.toString());
             }
             return 0L;
         } else {
-            return this.create(data);
+            return this.create(values);
         }
     }
 
-    public boolean update(ContentValues data) {
-        ContentValues createData = data;
+    public boolean update(ContentValues values) {
+        ContentValues createData = values;
         SQLiteDatabase db = this.getReadableDatabase();
         Boolean update = false;
         Log.d(getClass().getName(), "update primaryValue " + this.primaryValue.toString());
