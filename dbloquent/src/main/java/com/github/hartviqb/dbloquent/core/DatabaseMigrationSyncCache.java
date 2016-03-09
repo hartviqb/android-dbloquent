@@ -24,11 +24,11 @@ public class DatabaseMigrationSyncCache {
         ArrayList<DbLoquentMigration> dbLoquentMigrations = new ArrayList<>();
 
         MigrationClassCacheShared migrationClassCacheShared = new MigrationClassCacheShared(getContext());
-        String[] aaa = migrationClassCacheShared.getSharedMigrationNames();
+        String[] migrationNames = migrationClassCacheShared.getSharedMigrationNames();
 
         try {
-            for (int i = 0; i < aaa.length; i++) {
-                Object o = Class.forName(aaa[i]).newInstance();
+            for (int i = 0; i < migrationNames.length; i++) {
+                Object o = Class.forName(migrationNames[i]).newInstance();
                 DbLoquentMigration dbLoquentMigration = (DbLoquentMigration) o;
                 dbLoquentMigrations.add(dbLoquentMigration);
                 Log.d(getClass().getName(),dbLoquentMigration.getTableName());

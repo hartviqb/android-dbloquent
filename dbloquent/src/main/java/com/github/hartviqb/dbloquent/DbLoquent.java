@@ -5,6 +5,7 @@ import com.github.hartviqb.dbloquent.helper.DatabaseConfig;
 import com.github.hartviqb.dbloquent.shared.MigrationClassCacheShared;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,7 +25,7 @@ public class DbLoquent {
     }
 
     private void registerMigration(DatabaseConfig databaseConfig){
-        ArrayList<DbLoquentMigration>  dbLoquentMigrations= databaseConfig.getAddMigrationHelpers();
+        List<DbLoquentMigration> dbLoquentMigrations= databaseConfig.getAddMigrationHelpers();
         MigrationClassCacheShared migrationClassCacheShared = new MigrationClassCacheShared(context);
         Set setMigrations = new HashSet();
 

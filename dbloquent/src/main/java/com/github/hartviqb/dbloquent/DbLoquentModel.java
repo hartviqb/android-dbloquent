@@ -22,7 +22,13 @@ public abstract class DbLoquentModel extends DatabaseInit {
     private String query = "";
 
     //used at function deleteALL
-    private String whereQuery = "";
+    private String deleteAllQuery = "";
+
+    //used at function limit
+    private String limitQuery = "";
+
+    //used at function offset
+    private String offsetQuery = "";
 
     private Integer primaryValue = 0;
     private String primaryName = "id";
@@ -53,26 +59,36 @@ public abstract class DbLoquentModel extends DatabaseInit {
         this.tableName = this.tableName();
         this.columnName = this.fillAble();
 
-        select();
+        resetQuery();
     }
 
-    private void select() {
+    private void resetQuery() {
         this.query = "SELECT * FROM " + this.tableName;
+        this.deleteAllQuery = "";
+        this.offsetQuery = "";
+        this.limitQuery = "";
+
+        this.isUsedWhere = false;
+        this.isUsedWhereOnly = false;
+
+        this.primaryValue =0;
     }
 
     private void checkSeparatorWhereAndORQuery(String ANDorOR) {
         checkSeparatorWhereOnlyQuery(ANDorOR);
         if (this.isUsedWhere) {
             this.query = this.query + " " + ANDorOR + " ";
+            this.deleteAllQuery = this.deleteAllQuery + " " + ANDorOR + " ";
         } else {
             this.query = this.query + " WHERE ";
+            this.deleteAllQuery = this.deleteAllQuery + " WHERE ";
         }
         this.isUsedWhere = true;
     }
 
     private void checkSeparatorWhereOnlyQuery(String ANDorOR) {
         if (this.isUsedWhereOnly) {
-            this.whereQuery = this.whereQuery + " " + ANDorOR + " ";
+            this.deleteAllQuery = this.deleteAllQuery + " " + ANDorOR + " ";
         }
         this.isUsedWhereOnly = true;
     }
@@ -81,7 +97,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
         checkSeparatorWhereAndORQuery("AND");
 
         String newQuery = fieldname + " ='" + value + "'";
-        this.whereQuery = this.whereQuery + newQuery;
+        this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
@@ -89,7 +105,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
         checkSeparatorWhereAndORQuery("AND");
 
         String newQuery = fieldname + " " + expression + "'" + value + "'";
-        this.whereQuery = this.whereQuery + newQuery;
+        this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
@@ -97,7 +113,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
         checkSeparatorWhereAndORQuery("OR");
 
         String newQuery = fieldname + " ='" + value + "'";
-        this.whereQuery = this.whereQuery + newQuery;
+        this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
@@ -105,21 +121,21 @@ public abstract class DbLoquentModel extends DatabaseInit {
         checkSeparatorWhereAndORQuery("OR");
 
         String newQuery = fieldname + " " + expression + "'" + value + "'";
-        this.whereQuery = this.whereQuery + newQuery;
+        this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
     public void whereIN(String fieldname, String[] clauses) {
         checkSeparatorWhereAndORQuery("AND");
         String newQuery = fieldname + " IN(" + translateWhereINClause(clauses) + ")";
-        this.whereQuery = this.whereQuery + newQuery;
+        this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
     public void whereINOR(String fieldname, String[] clauses) {
         checkSeparatorWhereAndORQuery("OR");
         String newQuery = fieldname + " IN (" + translateWhereINClause(clauses) + ")";
-        this.whereQuery = this.whereQuery + newQuery;
+        this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
     }
 
@@ -137,14 +153,14 @@ public abstract class DbLoquentModel extends DatabaseInit {
     public void limit(Integer noOfRows){
         if (this.query != null) {
             String newQuery = " LIMIT " + noOfRows + " ";
-            this.query = this.query + newQuery;
+            this.limitQuery = newQuery;
         }
     }
 
     public void offset(Integer rowNum){
         if (this.query != null) {
             String newQuery = " OFFSET " + rowNum + " ";
-            this.query = this.query + newQuery;
+            this.offsetQuery = newQuery;
         }
     }
 
@@ -238,7 +254,8 @@ public abstract class DbLoquentModel extends DatabaseInit {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<ContentValues> listData = new ArrayList();
 
-        Cursor cursor = db.rawQuery(this.query, null);
+        String mergeQuery = this.query + this.limitQuery + this.offsetQuery;
+        Cursor cursor = db.rawQuery(mergeQuery, null);
 
         try {
             if (cursor != null && cursor.getCount() > 0) {
@@ -280,9 +297,11 @@ public abstract class DbLoquentModel extends DatabaseInit {
 
     public boolean deleteAll() {
         Boolean delete = false;
-        if (this.whereQuery != null) {
+        if (this.deleteAllQuery != null) {
             SQLiteDatabase db = this.getReadableDatabase();
-            delete = db.delete(this.tableName, this.whereQuery, null) > 0;
+            String mergeQueryDeleteAll = this.deleteAllQuery + this.limitQuery + this.offsetQuery;
+            String mergeQuery = this.primaryName + " IN (SELECT " + this.primaryName + " FROM " + this.tableName + " " + mergeQueryDeleteAll + " )";
+            delete = db.delete(this.tableName, mergeQuery, null) > 0;
             db.close();
         }
         return delete;
@@ -339,4 +358,12 @@ public abstract class DbLoquentModel extends DatabaseInit {
         return this.query;
     }
 
+    /**
+     * Close any open database object.
+     */
+    @Override
+    public synchronized void close() {
+        super.close();
+        resetQuery();
+    }
 }

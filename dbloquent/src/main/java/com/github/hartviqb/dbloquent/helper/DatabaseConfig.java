@@ -1,7 +1,7 @@
 package com.github.hartviqb.dbloquent.helper;
 
 import com.github.hartviqb.dbloquent.DbLoquentMigration;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
@@ -11,11 +11,11 @@ import java.util.ArrayList;
 public abstract class DatabaseConfig {
     public abstract Integer dbVersion();
     public abstract String dbName();
-    public abstract ArrayList<DbLoquentMigration> addMigrationHelpers();
+    public abstract List<DbLoquentMigration> addMigrationHelpers();
 
     private Integer dbVersion;
     private String dbName;
-    private ArrayList<DbLoquentMigration> addMigrationHelpers;
+    private List<DbLoquentMigration> addMigrationHelpers;
 
     public Integer getDbVersion() {
         return this.dbVersion();
@@ -25,7 +25,7 @@ public abstract class DatabaseConfig {
         return this.dbName();
     }
 
-    public ArrayList<DbLoquentMigration> getAddMigrationHelpers() {
+    public List<DbLoquentMigration> getAddMigrationHelpers() {
         return this.addMigrationHelpers();
     }
 
