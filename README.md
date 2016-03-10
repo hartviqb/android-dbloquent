@@ -14,6 +14,6 @@ and:
 
 ```gradle
 dependencies {
-	   compile 'com.github.hartviqb:android-dbloquent:v1.1'
+	   compile 'com.github.hartviqb:android-dbloquent:v1.0-beta.1'
 }
 ```
