@@ -1,4 +1,4 @@
-# android-dbloquent
+# Android Dbloquent - Version 1.0 Beta 1
 Object Relational Mapping (ORM) for Android
 
 
