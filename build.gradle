@@ -6,18 +6,59 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
-         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3' // Add this line
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
+plugins {
+    id "com.jfrog.bintray" version "1.5"
+}
+
+group = 'com.github.hartviqb.dbloquent'
+version = 'v1.0-Beta.1'
+
 allprojects {
     repositories {
         jcenter()
     }
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+bintray {
+    user = 'apiq404'
+    key = '2b67e37ad6386058e963498166dc46ae68cb8e92'
+    publications = ['MyPublication']
+    pkg {
+        repo = 'maven'
+        name = 'android-dbloquent'
+        userOrg = 'apiq404'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/hartviqb/android-dbloquent.git'
+        version {
+            name = 'v1.0-Beta.1'
+            desc = 'Object Relational Mapping (ORM) for Android Version 1.0 Beta 1'
+            released  = new Date()
+            vcsTag = 'v1.0-Beta.1'
+        }
+    }
+}
+
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+
+            groupId 'com.github.hartviqb.dbloquent'
+            artifactId 'android-dbloquent'
+            version 'v1.0.Beta-1'
+        }
+    }
+}
+
+
