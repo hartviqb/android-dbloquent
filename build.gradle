@@ -12,11 +12,8 @@ buildscript {
 }
 
 plugins {
-    id "com.jfrog.bintray" version "1.5"
+    id "com.jfrog.bintray" version "1.6"
 }
-
-group = 'com.github.hartviqb.dbloquent'
-version = 'v1.0-Beta.1'
 
 allprojects {
     repositories {
@@ -30,9 +27,13 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+
+group = 'com.github.hartviqb.dbloquent'
+version = 'v1.0-Beta.2'
+
 bintray {
-    user = 'apiq404'
-    key = '2b67e37ad6386058e963498166dc46ae68cb8e92'
+    user = project.hasProperty('user') ? project.property('user') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('key') ? project.property('key') : System.getenv('BINTRAY_KEY')
     publications = ['MyPublication']
     pkg {
         repo = 'maven'
@@ -41,24 +42,23 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/hartviqb/android-dbloquent.git'
         version {
-            name = 'v1.0-Beta.1'
-            desc = 'Object Relational Mapping (ORM) for Android Version 1.0 Beta 1'
+            name = 'v1.0-Beta.2'
+            desc = 'Object Relational Mapping (ORM) for Android Version 1.0 Beta 2'
             released  = new Date()
-            vcsTag = 'v1.0-Beta.1'
+            vcsTag = 'v1.0-Beta.2'
         }
     }
 }
-
 
 publishing {
     publications {
         MyPublication(MavenPublication) {
-
-            groupId 'com.github.hartviqb.dbloquent'
+            groupId 'com.github.hartviqb'
             artifactId 'android-dbloquent'
-            version 'v1.0.Beta-1'
+            version 'v1.0.Beta-2'
         }
     }
 }
+
 
 
