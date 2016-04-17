@@ -9,8 +9,8 @@ import com.github.hartviqb.dbloquent.shared.MigrationClassCacheShared;
 import java.util.ArrayList;
 
 /**
- * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
- * @copyright 2016 hartviq
+ * Author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * Copyright 2016 hartviq
  */
 
 public class DatabaseMigrationSyncCache {
@@ -27,11 +27,11 @@ public class DatabaseMigrationSyncCache {
         String[] migrationNames = migrationClassCacheShared.getSharedMigrationNames();
 
         try {
-            for (int i = 0; i < migrationNames.length; i++) {
-                Object o = Class.forName(migrationNames[i]).newInstance();
+            for (String migrationName : migrationNames) {
+                Object o = Class.forName(migrationName).newInstance();
                 DbLoquentMigration dbLoquentMigration = (DbLoquentMigration) o;
                 dbLoquentMigrations.add(dbLoquentMigration);
-                Log.d(getClass().getName(),dbLoquentMigration.getTableName());
+                Log.d(getClass().getName(), dbLoquentMigration.getTableName());
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

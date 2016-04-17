@@ -9,12 +9,12 @@ import com.github.hartviqb.dbloquent.helper.DatabaseHelper;
 import java.util.ArrayList;
 
 /**
- * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
- * @copyright 2016 hartviq
+ * Author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * Copyright 2016 hartviq
  */
 
-public class DatabaseMigrationHandler {
-    private ArrayList<DbLoquentMigration> dbLoquentMigrations = new ArrayList<DbLoquentMigration>();
+class DatabaseMigrationHandler {
+    private ArrayList<DbLoquentMigration> dbLoquentMigrations = new ArrayList<>();
 
     public DatabaseMigrationHandler(Context context) {
         DatabaseMigrationSyncCache databaseMigrationSyncCache = new DatabaseMigrationSyncCache(context);

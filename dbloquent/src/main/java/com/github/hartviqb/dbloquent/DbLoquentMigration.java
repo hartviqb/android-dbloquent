@@ -1,8 +1,8 @@
 package com.github.hartviqb.dbloquent;
 
 /**
- * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
- * @copyright 2016 hartviq
+ * Author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * Copyright 2016 hartviq
  */
 
 public abstract class DbLoquentMigration {
@@ -12,14 +12,14 @@ public abstract class DbLoquentMigration {
 
     /**
      * tableName description.
-     * @note the name of the table to be created
+     * note the name of the table to be created
      */
     public abstract String tableName();
 
     /**
      * columnsName description.
      *
-     * @note list table schema to be created
+     * note list table schema to be created
      */
     public abstract String columnsName();
 

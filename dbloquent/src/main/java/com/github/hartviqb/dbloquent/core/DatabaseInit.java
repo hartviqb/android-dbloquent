@@ -7,13 +7,13 @@ import android.util.Log;
 import com.github.hartviqb.dbloquent.shared.MigrationClassCacheShared;
 
 /**
- * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
- * @copyright 2016 hartviq
+ * Author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * Copyright 2016 hartviq
  */
 
 public class DatabaseInit extends SQLiteOpenHelper {
     private Context context;
-    public DatabaseInit(Context context) {
+    protected DatabaseInit(Context context) {
         super(context, new MigrationClassCacheShared(context).getSharedDbName(), null, new MigrationClassCacheShared(context).getSharedDbVersion());
         setContext(context);
     }
@@ -35,11 +35,11 @@ public class DatabaseInit extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public Context getContext() {
+    private Context getContext() {
         return context;
     }
 
-    public void setContext(Context context) {
+    private void setContext(Context context) {
         this.context = context;
     }
 }

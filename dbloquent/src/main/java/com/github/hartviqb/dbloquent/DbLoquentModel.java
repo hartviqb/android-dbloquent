@@ -9,8 +9,8 @@ import com.github.hartviqb.dbloquent.core.DatabaseInit;
 import java.util.ArrayList;
 
 /**
- * @author hartviq baturante <apiq404@gmail.com> on 01/01/16.
- * @copyright 2016 hartviq
+ * Author hartviq baturante <apiq404@gmail.com> on 01/01/16.
+ * Copyright 2016 hartviq
  */
 
 public abstract class DbLoquentModel extends DatabaseInit {
@@ -31,7 +31,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
     private String offsetQuery = "";
 
     private Integer primaryValue = 0;
-    private String primaryName = "id";
+    private final String primaryName = "id";
 
     private String tableName = "";
     private String[] columnName = null;
@@ -42,14 +42,14 @@ public abstract class DbLoquentModel extends DatabaseInit {
     /**
      * tableName description.
      *
-     * @note the name of the table will be called
+     * note the name of the table will be called
      */
     public abstract String tableName();
 
     /**
      * fillAble description.
      *
-     * @note list field names of the table will be called
+     * note list field names of the table will be called
      */
     public abstract String[] fillAble();
 
@@ -152,15 +152,13 @@ public abstract class DbLoquentModel extends DatabaseInit {
 
     public void limit(Integer noOfRows){
         if (this.query != null) {
-            String newQuery = " LIMIT " + noOfRows + " ";
-            this.limitQuery = newQuery;
+            this.limitQuery = " LIMIT " + noOfRows + " ";
         }
     }
 
     public void offset(Integer rowNum){
         if (this.query != null) {
-            String newQuery = " OFFSET " + rowNum + " ";
-            this.offsetQuery = newQuery;
+            this.offsetQuery = " OFFSET " + rowNum + " ";
         }
     }
 
@@ -182,9 +180,9 @@ public abstract class DbLoquentModel extends DatabaseInit {
         try {
             if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.moveToFirst()) {
-                    for (int i = 0; i < this.columnName.length; i++) {
-                        contentValues.put(this.columnName[i],
-                                cursor.getString(cursor.getColumnIndex(this.columnName[i].toString())));
+                    for (String aColumnName : this.columnName) {
+                        contentValues.put(aColumnName,
+                                cursor.getString(cursor.getColumnIndex(aColumnName)));
                     }
 
                     this.primaryValue = cursor.getInt(cursor.getColumnIndex(this.primaryName));
@@ -207,9 +205,9 @@ public abstract class DbLoquentModel extends DatabaseInit {
         try {
             if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.moveToLast()) {
-                    for (int i = 0; i < this.columnName.length; i++) {
-                        contentValues.put(this.columnName[i],
-                                cursor.getString(cursor.getColumnIndex(this.columnName[i])));
+                    for (String aColumnName : this.columnName) {
+                        contentValues.put(aColumnName,
+                                cursor.getString(cursor.getColumnIndex(aColumnName)));
                     }
 
                     this.primaryValue = cursor.getInt(cursor.getColumnIndex(this.primaryName));
@@ -233,9 +231,9 @@ public abstract class DbLoquentModel extends DatabaseInit {
         try {
             if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.moveToFirst()) {
-                    for (int i = 0; i < this.columnName.length; i++) {
-                        contentValues.put(this.columnName[i],
-                                cursor.getString(cursor.getColumnIndex(this.columnName[i])));
+                    for (String aColumnName : this.columnName) {
+                        contentValues.put(aColumnName,
+                                cursor.getString(cursor.getColumnIndex(aColumnName)));
                     }
 
                     this.primaryValue = cursor.getInt(cursor.getColumnIndex(this.primaryName));
@@ -250,6 +248,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
         return contentValues;
     }
 
+    @SuppressWarnings("unchecked")
     public ArrayList<ContentValues> get() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<ContentValues> listData = new ArrayList();
@@ -262,9 +261,9 @@ public abstract class DbLoquentModel extends DatabaseInit {
                 while (cursor.moveToNext()) {
 
                     ContentValues contentValues = new ContentValues();
-                    for (int i = 0; i < this.columnName.length; i++) {
-                        contentValues.put(this.columnName[i],
-                                cursor.getString(cursor.getColumnIndex(this.columnName[i])));
+                    for (String aColumnName : this.columnName) {
+                        contentValues.put(aColumnName,
+                                cursor.getString(cursor.getColumnIndex(aColumnName)));
                     }
                     listData.add(contentValues);
                 }
@@ -320,9 +319,8 @@ public abstract class DbLoquentModel extends DatabaseInit {
     public Long createOrUpdate(ContentValues wheres, ContentValues values) {
 
         for (String key : wheres.keySet()) {
-            String myKey = key;
             String myValue = (String) wheres.get(key);
-            where(myKey, myValue);
+            where(key, myValue);
         }
 
         ContentValues resultQwery = first();
@@ -339,12 +337,11 @@ public abstract class DbLoquentModel extends DatabaseInit {
     }
 
     public boolean update(ContentValues values) {
-        ContentValues createData = values;
         SQLiteDatabase db = this.getReadableDatabase();
         Boolean update = false;
         Log.d(getClass().getName(), "update primaryValue " + this.primaryValue.toString());
-        if (this.primaryValue != 0 && createData.size() > 0) {
-            update = db.update(this.tableName, createData, this.primaryName + "=" + this.primaryValue, null) > 0;
+        if (this.primaryValue != 0 && values.size() > 0) {
+            update = db.update(this.tableName, values, this.primaryName + "=" + this.primaryValue, null) > 0;
         }
         db.close();
         return update;
