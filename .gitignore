@@ -1,7 +1,6 @@
 # Built application files
 *.apk
 *.ap_
-app/*
 .idea/*
 dbloquent/dbloquent.iml
 
