@@ -10,5 +10,4 @@ public class DatabaseHelper {
     public static String translateCreateTables(String tableName, String columnTable) {
         return "CREATE TABLE " + tableName + "(" + columnTable + ")";
     }
-
 }

@@ -4,8 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+
 import com.github.hartviqb.dbloquent.core.DatabaseInit;
+
 import java.util.ArrayList;
 
 /**
@@ -41,14 +42,14 @@ public abstract class DbLoquentModel extends DatabaseInit {
 
     /**
      * tableName description.
-     *
+     * <p>
      * note the name of the table will be called
      */
     public abstract String tableName();
 
     /**
      * fillAble description.
-     *
+     * <p>
      * note list field names of the table will be called
      */
     public abstract String[] fillAble();
@@ -71,7 +72,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
         this.isUsedWhere = false;
         this.isUsedWhereOnly = false;
 
-        this.primaryValue =0;
+        this.primaryValue = 0;
     }
 
     private void checkSeparatorWhereAndORQuery(String ANDorOR) {
@@ -93,50 +94,55 @@ public abstract class DbLoquentModel extends DatabaseInit {
         this.isUsedWhereOnly = true;
     }
 
-    public void where(String fieldname, String value) {
+    public DbLoquentModel where(String fieldname, String value) {
         checkSeparatorWhereAndORQuery("AND");
-
         String newQuery = fieldname + " ='" + value + "'";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
+        return this;
     }
 
-    public void where(String fieldname, String expression, String value) {
+    public DbLoquentModel where(String fieldname, String expression, String value) {
         checkSeparatorWhereAndORQuery("AND");
 
         String newQuery = fieldname + " " + expression + "'" + value + "'";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
+        return this;
     }
 
-    public void whereOR(String fieldname, String value) {
+    public DbLoquentModel whereOR(String fieldname, String value) {
         checkSeparatorWhereAndORQuery("OR");
 
         String newQuery = fieldname + " ='" + value + "'";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
+        return this;
     }
 
-    public void whereOR(String fieldname, String expression, String value) {
+    public DbLoquentModel whereOR(String fieldname, String expression, String value) {
         checkSeparatorWhereAndORQuery("OR");
 
         String newQuery = fieldname + " " + expression + "'" + value + "'";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
+        return this;
     }
 
-    public void whereIN(String fieldname, String[] clauses) {
+    public DbLoquentModel whereIN(String fieldname, String[] clauses) {
         checkSeparatorWhereAndORQuery("AND");
         String newQuery = fieldname + " IN(" + translateWhereINClause(clauses) + ")";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
+        return this;
     }
 
-    public void whereINOR(String fieldname, String[] clauses) {
+    public DbLoquentModel whereINOR(String fieldname, String[] clauses) {
         checkSeparatorWhereAndORQuery("OR");
         String newQuery = fieldname + " IN (" + translateWhereINClause(clauses) + ")";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
         this.query = this.query + newQuery;
+        return this;
     }
 
     private String translateWhereINClause(String[] clauses) {
@@ -150,24 +156,28 @@ public abstract class DbLoquentModel extends DatabaseInit {
         return clauseValue;
     }
 
-    public void limit(Integer noOfRows){
+    public DbLoquentModel limit(Integer noOfRows) {
         if (this.query != null) {
             this.limitQuery = " LIMIT " + noOfRows + " ";
         }
+        return this;
     }
 
-    public void offset(Integer rowNum){
+    public DbLoquentModel offset(Integer rowNum) {
         if (this.query != null) {
             this.offsetQuery = " OFFSET " + rowNum + " ";
         }
+        return this;
     }
 
-    public void orderBy(String fieldName, String typeOrder) {
+    public DbLoquentModel orderBy(String fieldName, String typeOrder) {
         this.query = this.query + " ORDER BY " + fieldName + " " + typeOrder;
+        return this;
     }
 
-    public void groupBy(String fieldName) {
+    public DbLoquentModel groupBy(String fieldName) {
         this.query = this.query + " GROUP BY " + fieldName;
+        return this;
     }
 
     public ContentValues findByID(Integer id) {
@@ -248,7 +258,6 @@ public abstract class DbLoquentModel extends DatabaseInit {
         return contentValues;
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList<ContentValues> get() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<ContentValues> listData = new ArrayList();
@@ -319,7 +328,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
     public Long createOrUpdate(ContentValues wheres, ContentValues values) {
 
         for (String key : wheres.keySet()) {
-            String myValue = (String) wheres.get(key);
+            String myValue = String.valueOf(wheres.get(key));
             where(key, myValue);
         }
 
@@ -339,10 +348,16 @@ public abstract class DbLoquentModel extends DatabaseInit {
     public boolean update(ContentValues values) {
         SQLiteDatabase db = this.getReadableDatabase();
         Boolean update = false;
-        Log.d(getClass().getName(), "update primaryValue " + this.primaryValue.toString());
         if (this.primaryValue != 0 && values.size() > 0) {
             update = db.update(this.tableName, values, this.primaryName + "=" + this.primaryValue, null) > 0;
         }
+        db.close();
+        return update;
+    }
+
+    public boolean updateAll(ContentValues values) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        boolean update = db.update(this.tableName, values, this.deleteAllQuery, null) > 0;
         db.close();
         return update;
     }
