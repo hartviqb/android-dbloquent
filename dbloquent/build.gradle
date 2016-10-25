@@ -23,6 +23,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-apply plugin: 'com.github.dcendents.android-maven'  
+apply plugin: 'com.github.dcendents.android-maven'
 
 group='com.github.hartviqb'
