@@ -35,4 +35,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save" />
+
+    <Button
+        android:id="@+id/create_btn_create_or_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create or Update" />
 </LinearLayout>

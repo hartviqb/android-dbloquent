@@ -2,13 +2,11 @@ package com.github.hartviqb.mydbloquent;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.github.hartviqb.dbloquent.DbLoquent;
@@ -25,7 +23,7 @@ import java.util.List;
  */
 public class MainActivity extends Activity {
     private ListView lstView;
-    private Button btnCreate, btnDeleteAll;
+    private Button btnCreate, btnDeleteAll, btnUpdateAll;
     private UserAdapter userAdapter;
     private List<UserData> userDatas;
 
@@ -37,6 +35,7 @@ public class MainActivity extends Activity {
         lstView = (ListView) findViewById(R.id.listView);
         btnCreate = (Button) findViewById(R.id.btn_create);
         btnDeleteAll = (Button) findViewById(R.id.btn_delete_all);
+        btnUpdateAll = (Button) findViewById(R.id.btn_update_all);
 
         userDatas = new ArrayList<>();
         userAdapter = new UserAdapter(getApplicationContext(), userDatas);
@@ -81,6 +80,18 @@ public class MainActivity extends Activity {
             }
         });
 
+        btnUpdateAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserModel userModel = new UserModel(getApplicationContext());
+                userModel.get();
+                ContentValues asd = new ContentValues();
+                asd.put("name", "anjing");
+                userModel.updateAll(asd);
+                loadDB();
+            }
+        });
+
         lstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,6 +99,7 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra("id", data.getId());
                 startActivity(intent);
+
             }
         });
     }
@@ -112,7 +124,6 @@ public class MainActivity extends Activity {
         }
         userAdapter.notifyDataSetChanged();
     }
-
 
 
     private void clearAll() {
