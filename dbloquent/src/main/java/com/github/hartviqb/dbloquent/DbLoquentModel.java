@@ -24,6 +24,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
 
     //used at function deleteALL
     private String deleteAllQuery = "";
+    private String updateAllQuery = "";
 
     //used at function limit
     private String limitQuery = "";
@@ -38,7 +39,6 @@ public abstract class DbLoquentModel extends DatabaseInit {
     private String[] columnName = null;
 
     private boolean isUsedWhere = false;
-    private boolean isUsedWhereOnly = false;
 
     /**
      * tableName description.
@@ -66,38 +66,33 @@ public abstract class DbLoquentModel extends DatabaseInit {
     private void resetQuery() {
         this.query = "SELECT * FROM " + this.tableName;
         this.deleteAllQuery = "";
+        this.updateAllQuery = "";
         this.offsetQuery = "";
         this.limitQuery = "";
 
         this.isUsedWhere = false;
-        this.isUsedWhereOnly = false;
 
         this.primaryValue = 0;
     }
 
     private void checkSeparatorWhereAndORQuery(String ANDorOR) {
-        checkSeparatorWhereOnlyQuery(ANDorOR);
         if (this.isUsedWhere) {
             this.query = this.query + " " + ANDorOR + " ";
             this.deleteAllQuery = this.deleteAllQuery + " " + ANDorOR + " ";
+            this.updateAllQuery = this.updateAllQuery + " " + ANDorOR + " ";
         } else {
             this.query = this.query + " WHERE ";
             this.deleteAllQuery = this.deleteAllQuery + " WHERE ";
+            this.updateAllQuery = this.updateAllQuery + " ";
         }
         this.isUsedWhere = true;
-    }
-
-    private void checkSeparatorWhereOnlyQuery(String ANDorOR) {
-        if (this.isUsedWhereOnly) {
-            this.deleteAllQuery = this.deleteAllQuery + " " + ANDorOR + " ";
-        }
-        this.isUsedWhereOnly = true;
     }
 
     public DbLoquentModel where(String fieldname, String value) {
         checkSeparatorWhereAndORQuery("AND");
         String newQuery = fieldname + " ='" + value + "'";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
+        this.updateAllQuery = this.updateAllQuery + newQuery;
         this.query = this.query + newQuery;
         return this;
     }
@@ -107,6 +102,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
 
         String newQuery = fieldname + " " + expression + "'" + value + "'";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
+        this.updateAllQuery = this.updateAllQuery + newQuery;
         this.query = this.query + newQuery;
         return this;
     }
@@ -116,6 +112,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
 
         String newQuery = fieldname + " ='" + value + "'";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
+        this.updateAllQuery = this.updateAllQuery + newQuery;
         this.query = this.query + newQuery;
         return this;
     }
@@ -125,6 +122,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
 
         String newQuery = fieldname + " " + expression + "'" + value + "'";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
+        this.updateAllQuery = this.updateAllQuery + newQuery;
         this.query = this.query + newQuery;
         return this;
     }
@@ -133,6 +131,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
         checkSeparatorWhereAndORQuery("AND");
         String newQuery = fieldname + " IN(" + translateWhereINClause(clauses) + ")";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
+        this.updateAllQuery = this.updateAllQuery + newQuery;
         this.query = this.query + newQuery;
         return this;
     }
@@ -141,6 +140,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
         checkSeparatorWhereAndORQuery("OR");
         String newQuery = fieldname + " IN (" + translateWhereINClause(clauses) + ")";
         this.deleteAllQuery = this.deleteAllQuery + newQuery;
+        this.updateAllQuery = this.updateAllQuery + newQuery;
         this.query = this.query + newQuery;
         return this;
     }
@@ -357,7 +357,7 @@ public abstract class DbLoquentModel extends DatabaseInit {
 
     public boolean updateAll(ContentValues values) {
         SQLiteDatabase db = this.getReadableDatabase();
-        boolean update = db.update(this.tableName, values, this.deleteAllQuery, null) > 0;
+        boolean update = db.update(this.tableName, values, this.updateAllQuery, null) > 0;
         db.close();
         return update;
     }

@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class MainActivity extends Activity {
     private ListView lstView;
-    private Button btnCreate, btnDeleteAll, btnUpdateAll;
+    private Button btnCreate, btnDeleteAll, btnUpdateAll, btnTruncate;
     private UserAdapter userAdapter;
     private List<UserData> userDatas;
 
@@ -36,6 +36,7 @@ public class MainActivity extends Activity {
         btnCreate = (Button) findViewById(R.id.btn_create);
         btnDeleteAll = (Button) findViewById(R.id.btn_delete_all);
         btnUpdateAll = (Button) findViewById(R.id.btn_update_all);
+        btnTruncate = (Button) findViewById(R.id.btn_truncate);
 
         userDatas = new ArrayList<>();
         userAdapter = new UserAdapter(getApplicationContext(), userDatas);
@@ -84,10 +85,22 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 UserModel userModel = new UserModel(getApplicationContext());
+                userModel.where("phone", "1234");
+                userModel.whereOR("id", "1");
+                userModel.whereOR("id", "2");
                 userModel.get();
                 ContentValues asd = new ContentValues();
                 asd.put("name", "anjing");
                 userModel.updateAll(asd);
+                loadDB();
+            }
+        });
+
+        btnTruncate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserModel userModel = new UserModel(getApplicationContext());
+                userModel.truncate();
                 loadDB();
             }
         });
