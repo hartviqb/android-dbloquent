@@ -1,4 +1,4 @@
-# Android Dbloquent - Version 1.0 Beta 3
+# Android Dbloquent - Version 1.0 Beta 4
 Object Relational Mapping (ORM) for Android
 
 
@@ -14,6 +14,6 @@ and:
 
 ```gradle
 dependencies {
-	   compile 'com.github.hartviqb:android-dbloquent:v1.0-beta.3'
+	   compile 'com.github.hartviqb:android-dbloquent:v1.0-beta.4'
 }
 ```
