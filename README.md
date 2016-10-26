@@ -2,7 +2,7 @@
 Object Relational Mapping (ORM) for Android
 
 
-https://jitpack.io/#hartviqb/android-dbloquent
+https://jitpack.io/#hartviqb/android-dbloquent/v1.0-beta.4
 
 Add it to your build.gradle with:
 ```gradle
